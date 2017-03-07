@@ -106,6 +106,11 @@ In order to facilitate testing, two additional methods are available on the expo
 Convert the incoming string into a list of keywords, space separated. The current implementation will change the input string into lowercase, remove punctuation from the beginning and end of words, remove non-word items and remove duplicate items from the results.
 
 
+### `str = simpleSearch.stripHtml(str)`
+
+Removes HTML elements and unescapes all escaped characters in HTML.
+
+
 ### `str = simpleSearch.stripMarkdown(str)`
 
 A very simple filter that removes link markup from markdown, preserving the link text.

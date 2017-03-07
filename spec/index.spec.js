@@ -302,6 +302,14 @@ describe("metalsmithSimpleSearch.makeKeywords", () => {
         expect(plugin.makeKeywords("one two one one two three one four")).toEqual("four one three two");
     });
 });
+describe("metalsmithSimpleSearch.stripHtml", () => {
+    it("removes elements", () => {
+        expect(plugin.stripHtml("<a href=\"test\">test link</a> here")).toEqual("test link here");
+    });
+    it("unescapes HTML", () => {
+        expect(plugin.stripHtml("&lt;div&gt;&quot;Hi&apos;")).toEqual("<div>\"Hi'");
+    });
+});
 describe("metalsmithSimpleSearch.stripMarkdown", () => {
     it("removes link targets from within text", () => {
         expect(plugin.stripMarkdown("one [link1](http://example.com) here")).toEqual("one link1 here");
