@@ -1,61 +1,53 @@
 "use strict";
 
-var path, plugin;
+var plugin;
 
 /**
  * Call the plugin with the simulated files object.
  *
  * @param {Object} [config]
  * @param {Object} [files]
- * @return {Object} files
+ * @return {Promise.<Object>} files
  */
-function runPlugin(config, files) {
-    var metalsmith;
+function runPluginAsync(config, files) {
+    return new Promise((resolve, reject) => {
+        if (!files) {
+            files = {
+                ".archive/dot.html": {
+                    contents: Buffer.from("Hidden File", "utf8")
+                },
+                "index.html": {
+                    contents: Buffer.from("Main Index", "utf8"),
+                    keywords: [
+                        "awesome",
+                        "amazing"
+                    ],
+                    title: "Main index"
+                },
+                "toc.htm": {
+                    otherMetadata: "this is more metadata",
+                    contents: Buffer.from("Table of contents", "utf8"),
+                    url: "WRONG - this should be overwritten"
+                },
+                "search.php": {
+                    contents: Buffer.from("A PHP script?")
+                }
+            };
+        }
 
-    if (!files) {
-        files = {
-            ".archive/dot.html": {
-                contents: Buffer.from("Hidden File", "utf8")
-            },
-            "index.html": {
-                contents: Buffer.from("Main Index", "utf8"),
-                keywords: [
-                    "awesome",
-                    "amazing"
-                ],
-                title: "Main index"
-            },
-            "toc.htm": {
-                otherMetadata: "this is more metadata",
-                contents: Buffer.from("Table of contents", "utf8"),
-                url: "WRONG - this should be overwritten"
-            },
-            "search.php": {
-                contents: Buffer.from("A PHP script?")
+        plugin(config)(files, null, (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                // Convert Buffer objects to strings for easier test
+                // comparisons.
+                Object.keys(files).forEach((filename) => {
+                    files[filename].contents = files[filename].contents.toString("utf8");
+                });
+                resolve(files);
             }
-        };
-    }
-
-    metalsmith = jasmine.createSpyObj("metalsmith", [
-        "readFile"
-    ]);
-    metalsmith.readFile.and.callFake((filename) => {
-        return {
-            contents: `contents of ${filename}`,
-            mode: "0644"
-        };
+        });
     });
-
-    // Plugin runs synchronously so we don't need to make the tests
-    // asynchronous.
-    plugin(config)(files, metalsmith, () => {});
-
-    // Convert Buffer objects to strings for easier test comparisons.
-    Object.keys(files).forEach((filename) => {
-        files[filename].contents = files[filename].contents.toString("utf8");
-    });
-
-    return files;
 }
 
 
@@ -64,19 +56,18 @@ function runPlugin(config, files) {
  * JSON.
  *
  * @param {Object} [config]
- * @return {Array.<string>}
+ * @return {Promise.<Array.<string>>}
  */
-function getSearchHits(config) {
-    var files, searchInfo;
+function getSearchHitsAsync(config) {
+    return runPluginAsync(config).then((files) => {
+        files = files["search.json"].contents.toString("utf8");
+        files = JSON.parse(files);
+        files = files.map((item) => {
+            return item.url;
+        }).sort();
 
-    files = runPlugin(config);
-    searchInfo = files["search.json"].contents.toString("utf8");
-    searchInfo = JSON.parse(searchInfo);
-    searchInfo = searchInfo.map((item) => {
-        return item.url;
-    }).sort();
-
-    return searchInfo;
+        return files;
+    });
 }
 
 
@@ -117,158 +108,160 @@ function compareSearch(file, expected) {
 }
 
 
-path = require("path");
 plugin = require("..");
 
 describe("metalsmith-simple-search", () => {
     describe("options.destinationJson", () => {
         it("writes to 'search.json'", () => {
-            var files;
-
-            files = runPlugin();
-            compareSearch(files["search.json"], [
-                {
-                    contents: "index main",
-                    keywords: "awesome amazing",
-                    title: "Main index",
-                    url: "/index.html"
-                },
-                {
-                    contents: "contents of table",
-                    url: "/toc.htm"
-                }
-            ]);
-            expect(files["search-thing.json"]).not.toBeDefined();
+            return runPluginAsync().then((files) => {
+                compareSearch(files["search.json"], [
+                    {
+                        contents: "index main",
+                        keywords: "awesome amazing",
+                        title: "Main index",
+                        url: "/index.html"
+                    },
+                    {
+                        contents: "contents of table",
+                        url: "/toc.htm"
+                    }
+                ]);
+                expect(files["search-thing.json"]).not.toBeDefined();
+            });
         });
         it("can write to another file", () => {
-            var files;
-
-            files = runPlugin({
+            return runPluginAsync({
                 destinationJson: "search-thing.json"
+            }).then((files) => {
+                compareSearch(files["search-thing.json"], [
+                    {
+                        contents: "index main",
+                        keywords: "awesome amazing",
+                        title: "Main index",
+                        url: "/index.html"
+                    },
+                    {
+                        contents: "contents of table",
+                        url: "/toc.htm"
+                    }
+                ]);
+                expect(files["search.json"]).not.toBeDefined();
             });
-            compareSearch(files["search-thing.json"], [
-                {
-                    contents: "index main",
-                    keywords: "awesome amazing",
-                    title: "Main index",
-                    url: "/index.html"
-                },
-                {
-                    contents: "contents of table",
-                    url: "/toc.htm"
-                }
-            ]);
-            expect(files["search.json"]).not.toBeDefined();
         });
     });
     describe("options.destinationJs", () => {
-        var filePath;
-
-        beforeEach(() => {
-            filePath = path.resolve(__dirname, "..", "asset", "jekyll-search.min.js");
-        });
         it("includes 'simple-search.min.js'", () => {
-            var files;
-
-            files = runPlugin();
-            expect(files["simple-search.min.js"]).toEqual({
-                contents: `contents of ${filePath}`,
-                mode: "0644"
+            return runPluginAsync().then((files) => {
+                expect(files["simple-search.min.js"]).toEqual({
+                    contents: jasmine.any(Object),
+                    mode: "0644"
+                });
+                expect(files["search.js"]).not.toBeDefined();
             });
-            expect(files["search.js"]).not.toBeDefined();
         });
         it("can write to another file", () => {
-            var files;
-
-            files = runPlugin({
+            return runPluginAsync({
                 destinationJs: "search.js"
+            }).then((files) => {
+                expect(files["search.js"]).toEqual({
+                    contents: jasmine.any(Object),
+                    mode: "0644"
+                });
+                expect(files["simple-search.min.js"]).not.toBeDefined();
             });
-            expect(files["search.js"]).toEqual({
-                contents: `contents of ${filePath}`,
-                mode: "0644"
-            });
-            expect(files["simple-search.min.js"]).not.toBeDefined();
         });
     });
     describe("options.index", () => {
         // Default options (title/keyword/contents) are already in other tests.
         it("can index any metadata and overwrites any url property", () => {
-            compareSearch(runPlugin({
+            return runPluginAsync({
                 index: {
                     otherMetadata: true,
                     url: true
                 }
-            })["search.json"], [
-                {
-                    url: "/index.html"
-                },
-                {
-                    otherMetadata: "this is more metadata",
-                    url: "/toc.htm"
-                }
-            ]);
+            }).then((files) => {
+                compareSearch(files["search.json"], [
+                    {
+                        url: "/index.html"
+                    },
+                    {
+                        otherMetadata: "this is more metadata",
+                        url: "/toc.htm"
+                    }
+                ]);
+            });
         });
         it("is allowed to use a custom cleansing function", () => {
-            compareSearch(runPlugin({
+            return runPluginAsync({
                 index: {
                     contents: "markdown",
                     title: (str) => {
                         return `modified${str}modified`;
                     }
                 }
-            })["search.json"], [
-                {
-                    contents: "index main",
-                    title: "modifiedMain indexmodified",
-                    url: "/index.html"
-                },
-                {
-                    contents: "contents of table",
-                    url: "/toc.htm"
-                }
-            ]);
+            }).then((files) => {
+                compareSearch(files["search.json"], [
+                    {
+                        contents: "index main",
+                        title: "modifiedMain indexmodified",
+                        url: "/index.html"
+                    },
+                    {
+                        contents: "contents of table",
+                        url: "/toc.htm"
+                    }
+                ]);
+            });
         });
     });
     describe("options.match", () => {
         it("matches *.htm and *.html by default", () => {
-            expect(getSearchHits()).toEqual([
-                "/index.html",
-                "/toc.htm"
-            ]);
+            return getSearchHitsAsync().then((files) => {
+                expect(files).toEqual([
+                    "/index.html",
+                    "/toc.htm"
+                ]);
+            });
         });
         it("matches anything you like", () => {
-            expect(getSearchHits({
+            return getSearchHitsAsync({
                 match: "**/*.php"
-            })).toEqual([
-                "/search.php"
-            ]);
+            }).then((files) => {
+                expect(files).toEqual([
+                    "/search.php"
+                ]);
+            });
         });
     });
     describe("options.matchOptions", () => {
         // The default has been tested repeatedly with the hidden file.
         it("can include hidden files", () => {
-            expect(getSearchHits({
+            return getSearchHitsAsync({
                 matchOptions: {
                     dot: true
                 }
-            })).toEqual([
-                "/.archive/dot.html",
-                "/index.html",
-                "/toc.htm"
-            ]);
+            }).then((files) => {
+                expect(files).toEqual([
+                    "/.archive/dot.html",
+                    "/index.html",
+                    "/toc.htm"
+                ]);
+            });
         });
     });
     describe("options.transformUrl", () => {
         // The default adds a slash and that's been well tested.
         it("can change the URL in the generated JSON", () => {
-            expect(getSearchHits({
+            return getSearchHitsAsync({
                 transformUrl: (filename) => {
                     return `/my-site/${filename}`;
                 }
-            })).toEqual([
-                "/my-site/index.html",
-                "/my-site/toc.htm"
-            ]);
+            }).then((files) => {
+                expect(files).toEqual([
+                    "/my-site/index.html",
+                    "/my-site/toc.htm"
+                ]);
+            });
         });
     });
 });

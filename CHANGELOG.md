@@ -2,6 +2,12 @@ CHANGELOG
 =========
 
 
+1.1.1 - 2017-03-07
+------------------
+
+* Using `fs.readFile` instead of `metalsmith.readFile` because the latter doesn't work well for me.
+
+
 1.1.0 - 2017-03-07
 ------------------
 
