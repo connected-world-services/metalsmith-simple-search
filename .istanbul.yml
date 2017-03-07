@@ -1,0 +1,5 @@
+instrumentation:
+    excludes:
+        - asset/**/*
+        - spec/**/*.js
+    include-all-sources: true

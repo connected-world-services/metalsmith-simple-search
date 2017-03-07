@@ -1,0 +1,35 @@
+{
+    "name": "metalsmith-simple-search",
+    "version": "1.0.0",
+    "description": "",
+    "main": "lib/index.js",
+    "scripts": {
+        "test": "script/test",
+        "watch": "script/watch"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/connected-world-services/metalsmith-simple-search.git"
+    },
+    "keywords": [
+    ],
+    "author": "Tyler Akins <fidian@rumkin.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/connected-world-services/metalsmith-simple-search/issues"
+    },
+    "homepage": "https://github.com/connected-world-services/metalsmith-simple-search#readme",
+    "devDependencies": {
+        "codecov": "~1.0.1",
+        "eslint": "~3.16.1",
+        "istanbul": "~0.4.5",
+        "jasmine": "~2.5.3",
+        "nodemon": "~1.11.0"
+    },
+    "dependencies": {
+        "striptags": "~3.0.1"
+    },
+    "engines": {
+        "node": ">= 4.0.0"
+    }
+}
