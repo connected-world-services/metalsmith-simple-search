@@ -129,8 +129,8 @@ describe("metalsmith-simple-search", () => {
             compareSearch(files["search.json"], [
                 {
                     contents: "index main",
-                    keywords: "amazing awesome",
-                    title: "index main",
+                    keywords: "awesome amazing",
+                    title: "Main index",
                     url: "/index.html"
                 },
                 {
@@ -149,8 +149,8 @@ describe("metalsmith-simple-search", () => {
             compareSearch(files["search-thing.json"], [
                 {
                     contents: "index main",
-                    keywords: "amazing awesome",
-                    title: "index main",
+                    keywords: "awesome amazing",
+                    title: "Main index",
                     url: "/index.html"
                 },
                 {
@@ -191,20 +191,7 @@ describe("metalsmith-simple-search", () => {
         });
     });
     describe("options.index", () => {
-        it("indexes title, keywords, contents", () => {
-            compareSearch(runPlugin()["search.json"], [
-                {
-                    contents: "index main",
-                    keywords: "amazing awesome",
-                    title: "index main",
-                    url: "/index.html"
-                },
-                {
-                    contents: "contents of table",
-                    url: "/toc.htm"
-                }
-            ]);
-        });
+        // Default options (title/keyword/contents) are already in other tests.
         it("can index any metadata and overwrites any url property", () => {
             compareSearch(runPlugin({
                 index: {
@@ -216,7 +203,7 @@ describe("metalsmith-simple-search", () => {
                     url: "/index.html"
                 },
                 {
-                    otherMetadata: "is metadata more this",
+                    otherMetadata: "this is more metadata",
                     url: "/toc.htm"
                 }
             ]);
@@ -232,7 +219,7 @@ describe("metalsmith-simple-search", () => {
             })["search.json"], [
                 {
                     contents: "index main",
-                    title: "indexmodified modifiedmain",
+                    title: "modifiedMain indexmodified",
                     url: "/index.html"
                 },
                 {

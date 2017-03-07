@@ -85,9 +85,10 @@ This uses [minimatch] to match files. The `.matchOptions` object can be filled w
 The `index` property will determine how a particular file's metadata is indexed. It can be set to one of several values.
 
 * `false` or `null` - Do not index this property. Great for overriding defaults.
-* `true` - Index this property. If the value is an object, call `.toString()` on it first. If the value is an array, join with `" "`. Once it is a text string, index as normal by splitting into keywords, sorting, and removing duplicates.
-* `"html"` - Convert the value to a string then remove all HTML tags and unescape any escaped content. This means `<div class="xyz">text</div>` turns into `text` (HTML elements removed).
-* `"markdown"` or `"md"` - Assume the value is markdown and remove some non-text markup.
+* `true` - Index this property. If the value is an object, call `.toString()` on it first. If the value is an array, join with `" "`. Once it is a text string, index this as-is.
+* `"html"` - Convert the value to a string then remove all HTML tags and unescape any escaped content. This means `<div class="xyz">text</div>` turns into `text` (HTML elements removed). The HTML is scanned for changed to lowercase, made into a list of keywords and duplicates are removed.
+* `"markdown"` or `"md"` - Assume the value is markdown and remove some non-text markup. The markdown is changed to lowercase, made into a list of keywords and duplicates are removed.
+* `"keywords"` - Change the text into lowercase, make it into a list of keywords and remove duplicates.
 * `outStr = function (inStr)` - A custom function of your own that will take the string value of this metadata and convert it into a cleansed version.
 
 You need to also use the `browser/jekyll-search.js` or `browser/jekyll-search.min.js` in the browser and configure it. Those files are included in this repository. To configure it you will need to execute some JavaScript on page load. Please see the [Jekyll Simple Search] site or the [browser/README.md](browser/README.md) file for great instructions on how to finish setting this up.
