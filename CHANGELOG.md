@@ -2,6 +2,12 @@ CHANGELOG
 =========
 
 
+1.2.0 - 2017-05-22
+------------------
+
+* Added the option `skipSearchJs` to disable the automatic creation of the search-related JavaScript in the build folder.
+
+
 1.1.1 - 2017-03-07
 ------------------
 
