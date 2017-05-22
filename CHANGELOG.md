@@ -2,6 +2,12 @@ CHANGELOG
 =========
 
 
+1.2.1 - 2017-05-22
+------------------
+
+* Updated tests for newer version of Jasmine. `expect(file.contents).toEqual(jasmine.any(Object))` now fails when `file.contents` is a string.
+
+
 1.2.0 - 2017-05-22
 ------------------
 
