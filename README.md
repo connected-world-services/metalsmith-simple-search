@@ -34,7 +34,8 @@ Metadata properties are copied to the resulting JSON objects, optionally passing
                     "contents": "html"
                 },
                 "match": "**/*.{htm,html}",
-                "matchOptions": {}
+                "matchOptions": {},
+                "skipSearchJs": false
             }
         }
     }
@@ -70,7 +71,12 @@ This is how you would use it in JavaScript. Again, these are the defaults and do
         match: "**/*.{htm,html}",
 
         // Options for matching files. See minimatch for more information.
-        matchOptions: {}
+        matchOptions: {},
+
+        // If true, do not add "simple-search.min.js" to the output files.
+        // When switching this on, make sure the "simple-search.min.js" file
+        // is somehow included in your build.
+        skipSearchJs: false,
 
         // Transform the filename into a URL for the search engine. The
         // result from this file is saved as the ".url" property in the

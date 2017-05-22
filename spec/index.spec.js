@@ -249,6 +249,26 @@ describe("metalsmith-simple-search", () => {
             });
         });
     });
+    describe("options.skipSearchJs", () => {
+        it("skips writing 'simple-search.min.js'", () => {
+            return runPluginAsync({
+                skipSearchJs: true
+            }).then((files) => {
+                expect(files["simple-search.min.js"]).not.toBeDefined();
+            });
+        });
+        it("can write to another file", () => {
+            return runPluginAsync({
+                destinationJs: "search.js"
+            }).then((files) => {
+                expect(files["search.js"]).toEqual({
+                    contents: jasmine.any(Object),
+                    mode: "0644"
+                });
+                expect(files["simple-search.min.js"]).not.toBeDefined();
+            });
+        });
+    });
     describe("options.transformUrl", () => {
         // The default adds a slash and that's been well tested.
         it("can change the URL in the generated JSON", () => {
