@@ -18,7 +18,7 @@ Installation
     npm install --save metalsmith-simple-search
 
 
-Usag
+Usage
 -----
 
 Metadata properties are copied to the resulting JSON objects, optionally passing through filters.  First, this is an example that shows the default options in the JSON format. You do not need to specify any of these unless you want to override the default.
@@ -54,6 +54,10 @@ This is how you would use it in JavaScript. Again, these are the defaults and do
         // Where to save the file that performs the JavaScript-based searches
         // in a browser.
         destinationJs: "simple-search.min.js",
+        
+        // Control whether destinationJs (above) can be skipped in case you use a build
+        // system that copies the file externally
+        skipSearchJs: false,
 
         // Where to save the resulting JSON file that contains search words.
         destinationJson: "search.json",
