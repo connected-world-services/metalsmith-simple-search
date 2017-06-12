@@ -293,6 +293,7 @@ Data used for searching for a single file.
 The options for the plugin.
 
 **Kind**: inner typedef of [<code>module.exports</code>](#exp_module_metalsmith-simple-search--module.exports)  
+**See**: [https://github.com/fidian/metalsmith-plugin-kit](https://github.com/fidian/metalsmith-plugin-kit)  
 **Properties**
 
 | Name | Type | Default | Description |
@@ -300,8 +301,8 @@ The options for the plugin.
 | destinationJson | <code>string</code> | <code>&quot;search.json&quot;</code> | The location of the final JSON document. |
 | destinationJs | <code>string</code> | <code>&quot;simple-search.min.js&quot;</code> | Where to add the associated JavaScript file. |
 | index | <code>Object</code> | <code>{title:true,keywords:true,contents:&quot;html&quot;}</code> | Fields to index for searching. |
-| match | <code>string</code> |  | Files to match, defaults to *.htm and *.html anywhere. |
-| matchOptions | <code>Object</code> | <code>{}</code> | Additional options for filename matching. |
+| match | <code>module:metalsmith-plugin-kit~matchList</code> |  | Files to match, defaults to *.htm and *.html anywhere. |
+| matchOptions | <code>module:metalsmith-plugin-kit~matchOptions</code> | <code>{}</code> | Additional options for filename matching. |
 | skipSearchJs | <code>boolean</code> | <code>false</code> | If true, do not add the JavaScript to the output files. |
 | transformUrl | <code>function</code> |  | Callback for converting a single file into a URL. Input is the filename, the returned string is the URL. |
 
