@@ -2,6 +2,13 @@ CHANGELOG
 =========
 
 
+1.3.0 - 2017-06-12
+------------------
+
+* Use `metalsmith-plugin-kit` for the common functionality.
+* Improved documentation.
+
+
 1.2.2 - 2017-05-25
 ------------------
 
