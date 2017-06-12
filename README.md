@@ -70,7 +70,7 @@ This is how you would use it in JavaScript. Again, these are the defaults and do
         // search index.
         match: "**/*.{htm,html}",
 
-        // Options for matching files. See minimatch for more information.
+        // Options for matching files. See metalsmith-plugin-kit.
         matchOptions: {},
 
         // If true, do not write the `destinationJs` to the output files.
@@ -86,7 +86,7 @@ This is how you would use it in JavaScript. Again, these are the defaults and do
         }
     }));
 
-This uses [minimatch] to match files. The `.matchOptions` object can be filled with options that the [minimatch] library uses.
+This uses [`metalsmith-plugin-kit`] for matching files. It documents the options that can be used to control how files are matched.
 
 The `index` property will determine how a particular file's metadata is indexed. It can be set to one of several values.
 
@@ -332,8 +332,8 @@ This plugin is licensed under the [MIT License][License] with additional clauses
 [metalsmith-hbt-md]: https://github.com/ahdiaz/metalsmith-hbt-md
 [metalsmith-models]: https://github.com/jaichandra/metalsmith-models
 [metalsmith-mustache-metadata]: https://github.com/connected-world-services/metalsmith-mustache-metadata
+[metalsmith-plugin-kit]: https://github.com/fidian/metalsmith-plugin-kit
 [metalsmith-relative-links]: https://github.com/connected-world-services/metalsmith-relative-links
-[minimatch]: https://github.com/isaacs/minimatch
 [npm-badge]: https://img.shields.io/npm/v/metalsmith-simple-search.svg
 [npm-link]: https://npmjs.org/package/metalsmith-simple-search
 [travis-badge]: https://img.shields.io/travis/connected-world-services/metalsmith-simple-search/master.svg
