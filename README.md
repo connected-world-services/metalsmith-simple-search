@@ -133,7 +133,11 @@ metalsmith.use(simpleSearch({
             * [.stripHtml(str)](#module_metalsmith-simple-search--module.exports.stripHtml) ⇒ <code>string</code>
             * [.stripMarkdown(str)](#module_metalsmith-simple-search--module.exports.stripMarkdown) ⇒ <code>string</code>
         * _inner_
-            * [~buildSearchData(file, filename, options)](#module_metalsmith-simple-search--module.exports..buildSearchData) ⇒ [<code>searchData</code>](#metalsmith-simple-search..searchData)
+            * [~buildSearchData(file, filename, options)](#module_metalsmith-simple-search--module.exports..buildSearchData) ⇒ [<code>searchData</code>](#module_metalsmith-simple-search--module.exports..searchData)
+            * [~metalsmithFile](#module_metalsmith-simple-search--module.exports..metalsmithFile) : <code>Object</code>
+            * [~metalsmithFileCollection](#module_metalsmith-simple-search--module.exports..metalsmithFileCollection) : <code>Object.&lt;string, module:metalsmith-simple-search--module.exports~metalsmithFile&gt;</code>
+            * [~searchData](#module_metalsmith-simple-search--module.exports..searchData) : <code>Object.&lt;string, string&gt;</code>
+            * [~options](#module_metalsmith-simple-search--module.exports..options) : <code>Object</code>
 
 <a name="exp_module_metalsmith-simple-search--module.exports"></a>
 
@@ -144,7 +148,7 @@ The Simple Search factory.
 **Returns**: <code>function</code> - middleware  
 **Params**
 
-- options [<code>options</code>](#metalsmith-simple-search..options)
+- options [<code>options</code>](#module_metalsmith-simple-search--module.exports..options)
 
 **Example**  
 ```js
@@ -230,7 +234,7 @@ console.log(simpleSearch.stripMarkdown("[link]: example.com"));
 ```
 <a name="module_metalsmith-simple-search--module.exports..buildSearchData"></a>
 
-#### module.exports~buildSearchData(file, filename, options) ⇒ [<code>searchData</code>](#metalsmith-simple-search..searchData)
+#### module.exports~buildSearchData(file, filename, options) ⇒ [<code>searchData</code>](#module_metalsmith-simple-search--module.exports..searchData)
 Creates the metadata for a single file object.
 
 The `options` passed may have altered `options.index` values. Only booleans
@@ -238,12 +242,12 @@ and functions are supported. Strings were converted into functions in
 the factory middleware.
 
 **Kind**: inner method of [<code>module.exports</code>](#exp_module_metalsmith-simple-search--module.exports)  
-**Returns**: [<code>searchData</code>](#metalsmith-simple-search..searchData) - search data  
+**Returns**: [<code>searchData</code>](#module_metalsmith-simple-search--module.exports..searchData) - search data  
 **Params**
 
-- file [<code>metalsmithFile</code>](#metalsmith-simple-search..metalsmithFile)
+- file [<code>metalsmithFile</code>](#module_metalsmith-simple-search--module.exports..metalsmithFile)
 - filename <code>string</code>
-- options [<code>options</code>](#metalsmith-simple-search..options)
+- options [<code>options</code>](#module_metalsmith-simple-search--module.exports..options)
 
 **Example**  
 ```js
@@ -252,6 +256,55 @@ Object.keys(files).forEach((filename) => {
     result[filename] = buildSearchData(files[filename], filename, options);
 });
 ```
+<a name="module_metalsmith-simple-search--module.exports..metalsmithFile"></a>
+
+#### module.exports~metalsmithFile : <code>Object</code>
+Metalsmith's file object.
+
+**Kind**: inner typedef of [<code>module.exports</code>](#exp_module_metalsmith-simple-search--module.exports)  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| contents | <code>Buffer</code> | 
+| mode | <code>string</code> | 
+
+<a name="module_metalsmith-simple-search--module.exports..metalsmithFileCollection"></a>
+
+#### module.exports~metalsmithFileCollection : <code>Object.&lt;string, module:metalsmith-simple-search--module.exports~metalsmithFile&gt;</code>
+Metalsmith's collection of files.
+
+**Kind**: inner typedef of [<code>module.exports</code>](#exp_module_metalsmith-simple-search--module.exports)  
+<a name="module_metalsmith-simple-search--module.exports..searchData"></a>
+
+#### module.exports~searchData : <code>Object.&lt;string, string&gt;</code>
+Data used for searching for a single file.
+
+**Kind**: inner typedef of [<code>module.exports</code>](#exp_module_metalsmith-simple-search--module.exports)  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| url | <code>string</code> | Associated URL in case the search finds something. |
+
+<a name="module_metalsmith-simple-search--module.exports..options"></a>
+
+#### module.exports~options : <code>Object</code>
+The options for the plugin.
+
+**Kind**: inner typedef of [<code>module.exports</code>](#exp_module_metalsmith-simple-search--module.exports)  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| destinationJson | <code>string</code> | <code>&quot;search.json&quot;</code> | The location of the final JSON document. |
+| destinationJs | <code>string</code> | <code>&quot;simple-search.min.js&quot;</code> | Where to add the associated JavaScript file. |
+| index | <code>Object</code> | <code>{title:true,keywords:true,contents:&quot;html&quot;}</code> | Fields to index for searching. |
+| match | <code>string</code> |  | Files to match, defaults to *.htm and *.html anywhere. |
+| matchOptions | <code>Object</code> | <code>{}</code> | Additional options for filename matching. |
+| skipSearchJs | <code>boolean</code> | <code>false</code> | If true, do not add the JavaScript to the output files. |
+| transformUrl | <code>function</code> |  | Callback for converting a single file into a URL. Input is the filename, the returned string is the URL. |
+
 
 
 Development
