@@ -21,18 +21,18 @@
     },
     "homepage": "https://github.com/connected-world-services/metalsmith-simple-search#readme",
     "devDependencies": {
-        "codecov": "~2.2.0",
-        "eslint": "~4.0.0",
-        "istanbul": "~0.4.5",
-        "jasmine": "~2.6.0",
-        "jasmine-test-helpers": "~1.2.3",
+        "codecov": "^2.2.0",
+        "eslint": "^4.0.0",
+        "istanbul": "^0.4.5",
+        "jasmine": "^2.6.0",
+        "jasmine-test-helpers": "^1.2.3",
         "jsdoc-to-markdown": "^3.0.0",
-        "nodemon": "~1.11.0"
+        "nodemon": "^1.11.0"
     },
     "dependencies": {
         "metalsmith-plugin-kit": "^1.0.1",
-        "striptags": "~3.0.1",
-        "unescape": "~1.0.1"
+        "striptags": "^3.0.1",
+        "unescape": "^1.0.1"
     },
     "engines": {
         "node": ">= 4.0.0"
